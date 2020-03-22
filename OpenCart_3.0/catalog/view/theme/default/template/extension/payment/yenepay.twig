@@ -1,0 +1,59 @@
+{% if testmode %}
+<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ text_testmode }}</div>
+{% endif %}
+ {% if ETB %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+  {% endif %}
+<form action="{{ action }}" method="post">
+  <input type="hidden" name="Process" value="Cart" />
+  <input type="hidden" name="cmd" value="_cart" />
+  <input type="hidden" name="upload" value="1" />
+  <input type="hidden" name="MerchantId" value="{{ business }}" />
+  {% set i = 0 %}
+  {% for product in products %}
+  <input type="hidden" name="Items[{{ i }}].ItemName" value="{{ product.name }}" />
+  <input type="hidden" name="Items[{{ i }}].UnitPrice" value="{{ product.price }}" />
+  <input type="hidden" name="Items[{{ i }}].Quantity" value="{{ product.quantity }}" />
+  {% set j = 0 %}
+  {% for option in product.option %}
+  <input type="hidden" name="on{{ j }}_{{ i }}" value="{{ option.name }}" />
+  <input type="hidden" name="os{{ j }}_{{ i }}" value="{{ option.value }}" />
+  {% set j = j + 1 %}
+  {% endfor %}
+  {% set i = i + 1 %}
+  {% endfor %}
+  {% if discount_amount_cart %}
+  <input type="hidden" name="Discount" value="{{ discount_amount_cart }}" />
+  {% endif %}
+  <input type="hidden" name="Currency" value="{{ currency_code }}" />
+  <input type="hidden" name="first_name" value="{{ first_name }}" />
+  <input type="hidden" name="last_name" value="{{ last_name }}" />
+  <input type="hidden" name="address1" value="{{ address1 }}" />
+  <input type="hidden" name="address2" value="{{ address2 }}" />
+  <input type="hidden" name="city" value="{{ city }}" />
+  <input type="hidden" name="zip" value="{{ zip }}" />
+  <input type="hidden" name="country" value="{{ country }}" />
+  <input type="hidden" name="address_override" value="0" />
+  <input type="hidden" name="email" value="{{ email }}" />
+  <input type="hidden" name="invoice" value="{{ invoice }}" />
+  <input type="hidden" name="lc" value="{{ lc }}" />
+  <input type="hidden" name="rm" value="2" />
+  <input type="hidden" name="no_note" value="1" />
+  <input type="hidden" name="no_shipping" value="1" />
+  <input type="hidden" name="charset" value="utf-8" />
+  
+  <input type="hidden" name="IPNUrl" value="{{ notify_url }}" />
+  <input type="hidden" name="SuccessUrl" value="{{ return }}" />
+  
+  <input type="hidden" name="CancelUrl" value="{{ cancel_return }}" />
+  <input type="hidden" name="paymentaction" value="{{ paymentaction }}" />
+  <input type="hidden" name="MerchantOrderID" value="{{ custom }}" />
+  <input type="hidden" name="bn" value="OpenCart_2.0_WPS" />
+  <div class="buttons">
+    <div class="pull-right">
+      <input type="submit" value="{{ button_confirm }}" class="btn btn-primary yenepay-submit" />
+    </div>
+  </div>
+</form>
